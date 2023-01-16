@@ -51,21 +51,22 @@ report t
 END
 """
 
-FlexFileName: str = "2CM4_Eq1.pde"
-AngleRange = np.arange(5,91,5)
-print(AngleRange)
+if __name__ == "__main__":
+    FlexFileName: str = "2CM4_Eq1.pde"
+    AngleRange = np.arange(5,91,5)
+    print(AngleRange)
 
-for Angle in AngleRange:
-    with open(FlexFileName, 'w') as f:
-        print(FlexCode%Angle ,file=f)
-    completed = subprocess.run(["/Applications/FlexPDE7/FlexPDE7.app/Contents/MacOS/FlexPDE7", "-S", FlexFileName])
-    print("returned: ", completed.returncode)
-    with open("2CM4_Eq1_output/test.txt") as f:
-        data = np.loadtxt(f, skiprows=8)
-        t = data[:,0]
-        xd = data[:,1]
-        yd = data[:,2]
-        plt.plot(xd, yd)
-plt.title("Trajectory for various launch angles")
-plt.legend(AngleRange)
-plt.show()
+    for Angle in AngleRange:
+        with open(FlexFileName, 'w') as f:
+            print(FlexCode%Angle ,file=f)
+        completed = subprocess.run(["/Applications/FlexPDE7/FlexPDE7.app/Contents/MacOS/FlexPDE7", "-S", FlexFileName])
+        print("returned: ", completed.returncode)
+        with open("2CM4_Eq1_output/test.txt") as f:
+            data = np.loadtxt(f, skiprows=8)
+            t = data[:,0]
+            xd = data[:,1]
+            yd = data[:,2]
+            plt.plot(xd, yd)
+    plt.title("Trajectory for various launch angles")
+    plt.legend(AngleRange)
+    plt.show()
