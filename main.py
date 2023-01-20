@@ -17,7 +17,7 @@ DEFINITIONS
 xi=0 !initial coordinates
 yi=0
 vi = 21 !initial velocity
-theta_i = {}*pi/180 !initial angle
+theta_i = %s*pi/180 !initial angle
 g = 9.8
 m=1
 ! theoretical equations of motion (no drag)
@@ -44,7 +44,7 @@ LINE TO (1,0) TO (1,1) TO (0,1) TO CLOSE
 TIME 0 TO 50 halt yd<0 { if time dependent }
 PLOTS
 for t = 0 by 0.1 to endtime
-history(xd,yd) at (0,0) PrintOnly Export Format '#t#b#1#b#2' file = 'test.txt'
+history(xd,yd) at (0,0) PrintOnly Export Format '#t#b#1#b#2' file = 'output.txt'
 SUMMARY
 report val(xd,0,0) as 'xd'
 report val(yd,0,0) as 'yd'
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     angle_range = np.arange(5,91,5)
     for Angle in angle_range:
         with open(flex_file_name, 'w') as f:
-            print(flex_code.format(Angle) ,file=f)
+            print(flex_code%Angle ,file=f)
         completed = subprocess.run([flex_path, "-S", flex_file_name])
         print("returned: ", completed.returncode)
         with open(OutputPath) as f:
