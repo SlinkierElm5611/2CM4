@@ -2,31 +2,31 @@
     "Stefan": {
         "flex_version": 7,
         "path_to_executable": "/Applications/FlexPDE7/FlexPDE7.app/Contents/MacOS/FlexPDE7",
-        "flex_file_name": "2CM4_Eq1",
-        "output_file_name": "test.txt"
+        "flex_file_name": "working",
+        "output_file_name": "output.txt"
     },
     "Saarthak": {
-        "flex_version": 7,
-        "path_to_executable": "/Applications/FlexPDE7/FlexPDE7.app/Contents/MacOS/FlexPDE7",
-        "flex_file_name": "2CM4_Eq1",
-        "output_file_name": "test.txt"
+        "flex_version": 6,
+        "path_to_executable": "C:/FlexPDE6student/FlexPDE6s.exe",
+        "flex_file_name": "working",
+        "output_file_name": "output.txt"
     },
     "Clarissa": {
-        "flex_version": 7,
-        "path_to_executable": "/Applications/FlexPDE7/FlexPDE7.app/Contents/MacOS/FlexPDE7",
-        "flex_file_name": "2CM4_Eq1",
-        "output_file_name": "test.txt"
+        "flex_version": 6,
+        "path_to_executable": "C:/FlexPDE6student/FlexPDE6s.exe",
+        "flex_file_name": "working",
+        "output_file_name": "output.txt"
     },
     "Gabe": {
-        "flex_version": 7,
-        "path_to_executable": "/Applications/FlexPDE7/FlexPDE7.app/Contents/MacOS/FlexPDE7",
-        "flex_file_name": "2CM4_Eq1",
-        "output_file_name": "test.txt"
+        "flex_version": 6,
+        "path_to_executable": "C:/FlexPDE6student/FlexPDE6s.exe",
+        "flex_file_name": "working",
+        "output_file_name": "output.txt"
     },
     "Arif": {
-        "flex_version": 7,
-        "path_to_executable": "/Applications/FlexPDE7/FlexPDE7.app/Contents/MacOS/FlexPDE7",
-        "flex_file_name": "2CM4_Eq1",
-        "output_file_name": "test.txt"
+        "flex_version": 6,
+        "path_to_executable": "C:/FlexPDE6student/FlexPDE6s.exe",
+        "flex_file_name": "working",
+        "output_file_name": "output.txt"
     }
 }
