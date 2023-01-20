@@ -53,8 +53,9 @@ END
 """
 
 if __name__ == "__main__":
+    user_name: str = subprocess.run("whoami", stdout=subprocess.PIPE).stdout.decode('utf-8')
     config: dict = json.load(open("project_config.json", 'r'))
-    user_config: dict = config.get("Stefan")
+    user_config: dict = config.get(user_name.strip())
     flex_file_name: str = user_config.get("flex_file_name") + ".pde"
     flex_path: str = user_config.get("path_to_executable")
     output_path: str = ""
