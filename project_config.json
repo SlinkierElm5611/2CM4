@@ -1,0 +1,32 @@
+{
+    "Stefan": {
+        "flex_version": 7,
+        "path_to_executable": "/Applications/FlexPDE7/FlexPDE7.app/Contents/MacOS/FlexPDE7",
+        "flex_file_name": "2CM4_Eq1",
+        "output_file_name": "test.txt"
+    },
+    "Saarthak": {
+        "flex_version": 7,
+        "path_to_executable": "/Applications/FlexPDE7/FlexPDE7.app/Contents/MacOS/FlexPDE7",
+        "flex_file_name": "2CM4_Eq1",
+        "output_file_name": "test.txt"
+    },
+    "Clarissa": {
+        "flex_version": 7,
+        "path_to_executable": "/Applications/FlexPDE7/FlexPDE7.app/Contents/MacOS/FlexPDE7",
+        "flex_file_name": "2CM4_Eq1",
+        "output_file_name": "test.txt"
+    },
+    "Gabe": {
+        "flex_version": 7,
+        "path_to_executable": "/Applications/FlexPDE7/FlexPDE7.app/Contents/MacOS/FlexPDE7",
+        "flex_file_name": "2CM4_Eq1",
+        "output_file_name": "test.txt"
+    },
+    "Arif": {
+        "flex_version": 7,
+        "path_to_executable": "/Applications/FlexPDE7/FlexPDE7.app/Contents/MacOS/FlexPDE7",
+        "flex_file_name": "2CM4_Eq1",
+        "output_file_name": "test.txt"
+    }
+}

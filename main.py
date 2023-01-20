@@ -1,8 +1,9 @@
 import subprocess
 import numpy as np
 import matplotlib.pyplot as plt
+import json
 
-FlexCode: str = """
+flex_code: str = """
 TITLE 'Projectile Motion'
 COORDINATES cartesian2
 VARIABLES
@@ -16,7 +17,7 @@ DEFINITIONS
 xi=0 !initial coordinates
 yi=0
 vi = 21 !initial velocity
-theta_i = %s*pi/180 !initial angle
+theta_i = {}*pi/180 !initial angle
 g = 9.8
 m=1
 ! theoretical equations of motion (no drag)
@@ -52,21 +53,27 @@ END
 """
 
 if __name__ == "__main__":
-    FlexFileName: str = "2CM4_Eq1.pde"
-    AngleRange = np.arange(5,91,5)
-    print(AngleRange)
-
-    for Angle in AngleRange:
-        with open(FlexFileName, 'w') as f:
-            print(FlexCode%Angle ,file=f)
-        completed = subprocess.run(["/Applications/FlexPDE7/FlexPDE7.app/Contents/MacOS/FlexPDE7", "-S", FlexFileName])
+    config: dict = json.load(open("project_config.json", 'r'))
+    user_config: dict = config.get("Stefan")
+    flex_file_name: str = user_config.get("flex_file_name") + ".pde"
+    flex_path: str = user_config.get("path_to_executable")
+    output_path: str = ""
+    if user_config.get("flex_version") == 7 :
+        OutputPath = user_config.get("flex_file_name") + "_output/"+user_config.get("output_file_name")
+    else:
+        OutputPath = user_config.get("output_file_name")
+    angle_range = np.arange(5,91,5)
+    for Angle in angle_range:
+        with open(flex_file_name, 'w') as f:
+            print(flex_code.format(Angle) ,file=f)
+        completed = subprocess.run([flex_path, "-S", flex_file_name])
         print("returned: ", completed.returncode)
-        with open("2CM4_Eq1_output/test.txt") as f:
+        with open(OutputPath) as f:
             data = np.loadtxt(f, skiprows=8)
             t = data[:,0]
             xd = data[:,1]
             yd = data[:,2]
             plt.plot(xd, yd)
     plt.title("Trajectory for various launch angles")
-    plt.legend(AngleRange)
+    plt.legend(angle_range)
     plt.show()
