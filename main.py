@@ -52,6 +52,19 @@ report t
 END
 """
 
+def MassFuel2(mf1):
+    TotalCost = 3000000
+    Engine1Cost = 320*5000
+    Engine2Cost = 160*5000
+    MF2 = (TotalCost-Engine1Cost-Engine2Cost-17*mf1-24000-12000)/11
+    return MF2
+
+def MatchMass(MassFuel):
+    for j in MassFuel1:
+        MF2 = MassFuel2(j)
+        MS1.append(j)
+        MS2.append(MF2)
+
 if __name__ == "__main__":
     try:
         user_name: str = subprocess.run("whoami", stdout=subprocess.PIPE).stdout.decode('utf-8')
