@@ -53,15 +53,15 @@ END
 """
 
 
-def MassFuel2(mf1):
-    TotalCost = 3000000
+def MassFuel2(mf1: float) -> float:
+    total_cost = 3000000
     Engine1Cost = 320*5000
     Engine2Cost = 160*5000
-    MF2 = (TotalCost-Engine1Cost-Engine2Cost-17*mf1-24000-12000)/11
+    MF2 = (total_cost-Engine1Cost-Engine2Cost-17*mf1-24000-12000)/11
     return MF2
 
-def MatchMass(MassFuel):
-    for j in MassFuel1:
+def MatchMass(mass_fuel: float) -> float:
+    for j in MassFuel:
         MF2 = MassFuel2(j)
         MS1.append(j)
         MS2.append(MF2)
@@ -82,18 +82,8 @@ if __name__ == "__main__":
         flex_file_name: str = "output.pde"
         flex_path: str = "C:/FlexPDE6student/FlexPDE6s.exe"
         output_path: str = "output.txt"
-    angle_range = np.arange(5,91,5)
-    for Angle in angle_range:
-        with open(flex_file_name, 'w') as f:
-            print(flex_code%Angle ,file=f)
-        completed = subprocess.run([flex_path, "-S", flex_file_name])
-        print("returned: ", completed.returncode)
-        with open(output_path) as f:
-            data = np.loadtxt(f, skiprows=8)
-            t = data[:,0]
-            xd = data[:,1]
-            yd = data[:,2]
-            plt.plot(xd, yd)
+    
+    #
+
     plt.title("Trajectory for various launch angles")
-    plt.legend(angle_range)
     plt.show()
