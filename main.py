@@ -57,7 +57,7 @@ def compute_second_mass_fuel(mass_of_first_stage_fuel: float) -> float:
     total_cost = 3000000
     cost_of_engine_one = 320*5000
     cost_of_engine_two = 160*5000
-    return (total_cost-cost_of_engine_one-cost_of_engine_two-17*mass_of_first_stage_fuel-24000-12000)/11
+    return (total_cost-cost_of_engine_one-cost_of_engine_two-17*mass_of_first_stage_fuel-24000-12000)/17
 
 def match_fuel_masses(mass_fuel: list[float]) -> list[list[float]]:
     masses_of_first_stage: list[float] = []
