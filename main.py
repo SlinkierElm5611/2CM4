@@ -53,23 +53,28 @@ END
 """
 
 if __name__ == "__main__":
-    user_name: str = subprocess.run("whoami", stdout=subprocess.PIPE).stdout.decode('utf-8')
-    config: dict = json.load(open("project_config.json", 'r'))
-    user_config: dict = config.get(user_name.strip())
-    flex_file_name: str = user_config.get("flex_file_name") + ".pde"
-    flex_path: str = user_config.get("path_to_executable")
-    output_path: str = ""
-    if user_config.get("flex_version") == 7 :
-        OutputPath = user_config.get("flex_file_name") + "_output/"+user_config.get("output_file_name")
-    else:
-        OutputPath = user_config.get("output_file_name")
+    try:
+        user_name: str = subprocess.run("whoami", stdout=subprocess.PIPE).stdout.decode('utf-8')
+        config: dict = json.load(open("project_config.json", 'r'))
+        user_config: dict = config.get(user_name.strip())
+        flex_file_name: str = user_config.get("flex_file_name") + ".pde"
+        flex_path: str = user_config.get("path_to_executable")
+        output_path: str = ""
+        if user_config.get("flex_version") == 7 :
+            output_path = user_config.get("flex_file_name") + "_output/"+user_config.get("output_file_name")
+        else:
+            output_path = user_config.get("output_file_name")
+    except:
+        flex_file_name: str = "output.pde"
+        flex_path: str = "C:/FlexPDE6student/FlexPDE6s.exe"
+        output_path: str = "output.txt"
     angle_range = np.arange(5,91,5)
     for Angle in angle_range:
         with open(flex_file_name, 'w') as f:
             print(flex_code%Angle ,file=f)
         completed = subprocess.run([flex_path, "-S", flex_file_name])
         print("returned: ", completed.returncode)
-        with open(OutputPath) as f:
+        with open(output_path) as f:
             data = np.loadtxt(f, skiprows=8)
             t = data[:,0]
             xd = data[:,1]
