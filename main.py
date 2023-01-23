@@ -52,6 +52,7 @@ report t
 END
 """
 
+
 def MassFuel2(mf1):
     TotalCost = 3000000
     Engine1Cost = 320*5000
