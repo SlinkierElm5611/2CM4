@@ -54,19 +54,18 @@ END
 
 
 def compute_second_mass_fuel(mass_of_first_stage_fuel: float) -> float:
-    total_cost = 3000000
-    cost_of_engine_one = 320*5000
-    cost_of_engine_two = 160*5000
+    total_cost: float = 3000000
+    cost_of_engine_one: float = 320*5000
+    cost_of_engine_two: float = 160*5000
     return (total_cost-cost_of_engine_one-cost_of_engine_two-17*mass_of_first_stage_fuel-24000-12000)/17
 
-def match_fuel_masses(mass_fuel: list[float]) -> list[list[float]]:
-    masses_of_first_stage: list[float] = []
+
+def match_fuel_masses(mass_fuel: list[float]) -> list[float]:
     masses_of_second_stage: list[float] = []
     for j in mass_fuel:
         second_mass_fuel = compute_second_mass_fuel(j)
-        masses_of_first_stage.append(j)
         masses_of_second_stage.append(second_mass_fuel)
-    return [masses_of_first_stage, masses_of_second_stage]
+    return masses_of_second_stage
     
 
 if __name__ == "__main__":
