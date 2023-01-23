@@ -53,18 +53,21 @@ END
 """
 
 
-def MassFuel2(mf1: float) -> float:
+def compute_second_mass_fuel(mass_of_first_stage_fuel: float) -> float:
     total_cost = 3000000
-    Engine1Cost = 320*5000
-    Engine2Cost = 160*5000
-    MF2 = (total_cost-Engine1Cost-Engine2Cost-17*mf1-24000-12000)/11
-    return MF2
+    cost_of_engine_one = 320*5000
+    cost_of_engine_two = 160*5000
+    return (total_cost-cost_of_engine_one-cost_of_engine_two-17*mass_of_first_stage_fuel-24000-12000)/11
 
-def MatchMass(mass_fuel: float) -> float:
-    for j in MassFuel:
-        MF2 = MassFuel2(j)
-        MS1.append(j)
-        MS2.append(MF2)
+def match_fuel_masses(mass_fuel: list[float]) -> list[list[float]]:
+    masses_of_first_stage: list[float] = []
+    masses_of_second_stage: list[float] = []
+    for j in mass_fuel:
+        second_mass_fuel = compute_second_mass_fuel(j)
+        masses_of_first_stage.append(j)
+        masses_of_second_stage.append(second_mass_fuel)
+    return [masses_of_first_stage, masses_of_second_stage]
+    
 
 if __name__ == "__main__":
     try:
@@ -83,7 +86,7 @@ if __name__ == "__main__":
         flex_path: str = "C:/FlexPDE6student/FlexPDE6s.exe"
         output_path: str = "output.txt"
     
-    #
+    #add optimization codes below this line!
 
     plt.title("Trajectory for various launch angles")
     plt.show()
