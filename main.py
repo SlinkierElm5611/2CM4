@@ -188,7 +188,7 @@ for mass_one in mass_range:
 	print(result.returncode)
 
 	with open(output_path, "r") as f:
-		data = np.loadtxt(f,skiprows=flex_version+2)
+		data = np.loadtxt(f,skiprows=flex_version+1)
 		t = data[:,0]
 		max_energy = 0
 		for energy in data[:,3]:
