@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 
-flex_code: str = """
+flex_code  = """
 TITLE '2CM4 Assignment 1 GGL' { the problem identification }
 COORDINATES cartesian1 { coordinate system, 1D,2D,3D, etc }
 VARIABLES { system variables }
@@ -144,15 +144,15 @@ END
 """
 
 
-def compute_second_mass_fuel(mass_of_first_stage_fuel: float) -> float:
-	total_cost: float = 3000000
-	cost_of_engine_one: float = 320*5000
-	cost_of_engine_two: float = 160*5000
+def compute_second_mass_fuel(mass_of_first_stage_fuel):
+	total_cost = 3000000
+	cost_of_engine_one = 320*5000
+	cost_of_engine_two = 160*5000
 	return (total_cost-cost_of_engine_one-cost_of_engine_two-17*mass_of_first_stage_fuel-24000-12000)/17
 
 
-def match_fuel_masses(mass_fuel: list[float]) -> list[float]:
-	masses_of_second_stage: list[float] = []
+def match_fuel_masses(mass_fuel):
+	masses_of_second_stage  = []
 	for j in mass_fuel:
 		second_mass_fuel = compute_second_mass_fuel(j)
 		masses_of_second_stage.append(second_mass_fuel)
@@ -160,27 +160,47 @@ def match_fuel_masses(mass_fuel: list[float]) -> list[float]:
 	
 
 try:
-	user_name: str = subprocess.run("whoami", stdout=subprocess.PIPE).stdout.decode('utf-8')
-	config: dict = json.load(open("project_config.json", 'r'))
-	user_config: dict = config.get(user_name.strip())
-	flex_file_name: str = user_config.get("flex_file_name") + ".pde"
-	flex_path: str = user_config.get("path_to_executable")
-	output_path: str = ""
-	if user_config.get("flex_version") == 7 :
+	user_name  = subprocess.run("whoami", stdout=subprocess.PIPE).stdout.decode('utf-8')
+	config  = json.load(open("project_config.json", 'r'))
+	user_config  = config.get(user_name.strip())
+	flex_file_name  = user_config.get("flex_file_name") + ".pde"
+	flex_path  = user_config.get("path_to_executable")
+	output_path  = ""
+	flex_version = user_config.get("flex_version")
+	if flex_version == 7 :
 		output_path = user_config.get("flex_file_name") + "_output/"+user_config.get("output_file_name")
 	else:
 		output_path = user_config.get("output_file_name")
 except:
-	flex_file_name: str = "output.pde"
-	flex_path: str = "C:/FlexPDE6student/FlexPDE6s.exe"
-	output_path: str = "output.txt"
-
-for mass_one in range(29000, 32000, 1000):
+	flex_file_name  = "output.pde"
+	flex_path  = "C:/FlexPDE6student/FlexPDE6s.exe"
+	output_path  = "output.txt"
+	
+mass_range = range(29000, 32000, 100)
+kinetic_energies = []
+masses = []
+for mass_one in mass_range:
 	mass_two:float = compute_second_mass_fuel(mass_one)
 	with open(flex_file_name, "w") as f:
 		print(flex_code%(mass_one, mass_two), file=f)
-		result = subprocess.run([flex_path, "-S", flex_file_name])
-		print(result.returncode)
-		
-plt.title("Trajectory for various launch angles")
+	result = subprocess.run([flex_path, "-S", flex_file_name])
+	print(result.returncode)
+
+	with open(output_path, "r") as f:
+		data = np.loadtxt(f,skiprows=flex_version+2)
+		t = data[:,0]
+		max_energy = 0
+		for energy in data[:,3]:
+			if energy > max_energy:
+				max_energy = energy
+		kinetic_energies.append(max_energy)
+		masses.append(data[:,2][0])
+		pass
+current_max = 0
+for energy in kinetic_energies:
+	if energy > current_max:
+		current_max = energy
+print(current_max)
+plt.plot(mass_range, kinetic_energies)
+plt.title("Max energy based on mass of fuel one")
 plt.show()
