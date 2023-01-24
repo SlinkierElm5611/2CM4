@@ -17,10 +17,10 @@ DEFINITIONS { parameter definitions }
 !dynamic parameters
 
 	!stage 1 rocket
-	mfuel10 = 10000 !fuel mass of rocket stage 1 kg
+	mfuel10 = %s !fuel mass of rocket stage 1 kg
 
 	!stage 2 rocket
-	mfuel20 = 3000 !fuel mass of rocket stage 2 kg
+	mfuel20 = %s !fuel mass of rocket stage 2 kg
 
 
 !static parameters
@@ -194,13 +194,7 @@ if __name__ == "__main__":
         flex_file_name: str = "output.pde"
         flex_path: str = "C:/FlexPDE6student/FlexPDE6s.exe"
         output_path: str = "output.txt"
-    
-    #add optimization codes below this line!
-    # mass_range = list(range(1, 1001, 100))
-
-    # for mass in mass_range:
+	
     subprocess.run([flex_path, "-S", flex_file_name])
-    
-
     plt.title("Trajectory for various launch angles")
     plt.show()
