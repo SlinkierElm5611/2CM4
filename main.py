@@ -43,19 +43,19 @@ DEFINITIONS { parameter definitions }
 !thrust force
 	m0 = mpayload + meng1 + mtank1 + mfuel10 + meng2 + mtank2 + mfuel20 
 
-    tthrust = 0
+	tthrust = 0
 	tfuel1 = mfuel10/q1 
 
 	Fthrustmag1 = if t>tthrust and t<(tfuel1+ tthrust) then q1*ve1 else 0 
 	Fthrust1 =  Fthrustmag1*v/(magnitude(v)+1e-3)
-    mfuelused1 = if t<tthrust then 0 else if t<(tthrust+tfuel1) then q1*(t-tthrust) else mfuel10
+	mfuelused1 = if t<tthrust then 0 else if t<(tthrust+tfuel1) then q1*(t-tthrust) else mfuel10
 	!m = m0 - mfuelused1
 
 	tfuel2 = mfuel20/q2 
 
 	Fthrustmag2 = if t>tthrust+tfuel1 and t<(tthrust +tfuel1 + tfuel2) then q2*ve2 else 0 
 	Fthrust2 =  Fthrustmag2*v/(magnitude(v)+1e-3)
-    mfuelused2 = if t<(tthrust+tfuel1) then 0 else if t<(tthrust+tfuel1+tfuel2) then q2*(t-tfuel1-tthrust) else mfuel20
+	mfuelused2 = if t<(tthrust+tfuel1) then 0 else if t<(tthrust+tfuel1+tfuel2) then q2*(t-tfuel1-tthrust) else mfuel20
 	!m = m0 -mtank1 - meng1 - mfuelused1 - mfuelused2
 	m = if t<=tthrust then m0 else if t<=(tthrust+tfuel1) then (m0 - mfuelused1) 
 		else if t<=(tthrust+tfuel1+tfuel2) then (m0 - mtank1 - meng1 - mfuelused1 - mfuelused2)
@@ -63,19 +63,19 @@ DEFINITIONS { parameter definitions }
 
 
 !force of gravity
-    bigG = 6.674e-11
-    mEarth = 5.9722e24
-    rEarth = 6.3781e6
+	bigG = 6.674e-11
+	mEarth = 5.9722e24
+	rEarth = 6.3781e6
 	rad = r-vector(0,-rEarth)
 	radMag = magnitude(rad)
 	radHat = rad/radMag
-    g = bigG*mEarth/radMag^2*radHat
+	g = bigG*mEarth/radMag^2*radHat
 	gMag = magnitude(g)
 	Fgrav =-m*g
-    
-    vwind = vector(0, 0)
+	
+	vwind = vector(0, 0)
 	vrel = v-vwind
-    
+	
 	h =radMag - rEarth
 
 
@@ -91,7 +91,7 @@ DEFINITIONS { parameter definitions }
 	Area=1
 	CD = .15
 	Fdrag = -.5*rho*area*cd*vrel*magnitude(vrel)
-    
+	
 	
 !F=ma
 	Fnet = Fgrav + Fthrust1 + Fthrust2 + Fdrag
@@ -99,7 +99,7 @@ DEFINITIONS { parameter definitions }
 
 
 !initial conditions
-    theta0 =90 *pi/180 !launch angle in rad
+	theta0 =90 *pi/180 !launch angle in rad
 	v0 =1e-3 !initial speed in m/s
 	ay = dot(a, vector(0,1))
 
@@ -119,7 +119,7 @@ DEFINITIONS { parameter definitions }
 !kinetic energy
 	EKin = 1/2*m*magnitude(v)^2
 
-    
+
 INITIAL VALUES
 	v = v0*vector(cos(theta0), sin(theta0))
 	r = vector(0,0)
@@ -139,62 +139,48 @@ TIME 0 TO 3000 halt(radMag<rEarth or p=0)! or rrelMag<400) { if time dependent }
 
 PLOTS { save result displays }
 for t= 0 by endtime/300 to endtime
-	history(ry, vy*20, ay*100) at(0)
-	history(ry) at (0) vs rx
-	report rx
-	report ry
-	report t
-	report Ekin
-	report costTotal
-	report m
-	report magnitude(v)
-	!history(rrelMag) at (0)
-	!history(Fc) at (0)
-	history(Fthrust1, Fthrust2, Fgrav) at (0)
-	history(Fdrag) at (0)
-	report t
-	history(magnitude(Fgrav))at(0)
-	report(magnitude(Fgrav))
-	history(gMag) at (0)
-	history(gMag) at (0) vs (h)
-	history(m) at (0)
 	history(magnitude(v), m, Ekin, costTotal, p) at(0) printonly Export Format '#t#b#1#b#2#b#3#b#4#b#5' file = 'output.txt'
 END
 """
 
 
 def compute_second_mass_fuel(mass_of_first_stage_fuel: float) -> float:
-    total_cost: float = 3000000
-    cost_of_engine_one: float = 320*5000
-    cost_of_engine_two: float = 160*5000
-    return (total_cost-cost_of_engine_one-cost_of_engine_two-17*mass_of_first_stage_fuel-24000-12000)/17
+	total_cost: float = 3000000
+	cost_of_engine_one: float = 320*5000
+	cost_of_engine_two: float = 160*5000
+	return (total_cost-cost_of_engine_one-cost_of_engine_two-17*mass_of_first_stage_fuel-24000-12000)/17
 
 
 def match_fuel_masses(mass_fuel: list[float]) -> list[float]:
-    masses_of_second_stage: list[float] = []
-    for j in mass_fuel:
-        second_mass_fuel = compute_second_mass_fuel(j)
-        masses_of_second_stage.append(second_mass_fuel)
-    return masses_of_second_stage
-    
-
-if __name__ == "__main__":
-    try:
-        user_name: str = subprocess.run("whoami", stdout=subprocess.PIPE).stdout.decode('utf-8')
-        config: dict = json.load(open("project_config.json", 'r'))
-        user_config: dict = config.get(user_name.strip())
-        flex_file_name: str = user_config.get("flex_file_name") + ".pde"
-        flex_path: str = user_config.get("path_to_executable")
-        output_path: str = ""
-        if user_config.get("flex_version") == 7 :
-            output_path = user_config.get("flex_file_name") + "_output/"+user_config.get("output_file_name")
-        else:
-            output_path = user_config.get("output_file_name")
-    except:
-        flex_file_name: str = "output.pde"
-        flex_path: str = "C:/FlexPDE6student/FlexPDE6s.exe"
-        output_path: str = "output.txt"
+	masses_of_second_stage: list[float] = []
+	for j in mass_fuel:
+		second_mass_fuel = compute_second_mass_fuel(j)
+		masses_of_second_stage.append(second_mass_fuel)
+	return masses_of_second_stage
 	
-    subprocess.run([flex_path, "-S", flex_file_name])
-    plt.title("Trajectory for various launch angles")
-    plt.show()
+
+try:
+	user_name: str = subprocess.run("whoami", stdout=subprocess.PIPE).stdout.decode('utf-8')
+	config: dict = json.load(open("project_config.json", 'r'))
+	user_config: dict = config.get(user_name.strip())
+	flex_file_name: str = user_config.get("flex_file_name") + ".pde"
+	flex_path: str = user_config.get("path_to_executable")
+	output_path: str = ""
+	if user_config.get("flex_version") == 7 :
+		output_path = user_config.get("flex_file_name") + "_output/"+user_config.get("output_file_name")
+	else:
+		output_path = user_config.get("output_file_name")
+except:
+	flex_file_name: str = "output.pde"
+	flex_path: str = "C:/FlexPDE6student/FlexPDE6s.exe"
+	output_path: str = "output.txt"
+
+for mass_one in range(29000, 32000, 1000):
+	mass_two:float = compute_second_mass_fuel(mass_one)
+	with open(flex_file_name, "w") as f:
+		print(flex_code%(mass_one, mass_two), file=f)
+		result = subprocess.run([flex_path, "-S", flex_file_name])
+		print(result.returncode)
+		
+plt.title("Trajectory for various launch angles")
+plt.show()
