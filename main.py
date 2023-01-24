@@ -175,6 +175,7 @@ except:
 	flex_file_name  = "output.pde"
 	flex_path  = "C:/FlexPDE6student/FlexPDE6s.exe"
 	output_path  = "output.txt"
+	flex_version = 6
 	
 mass_range = range(29000, 32000, 100)
 kinetic_energies = []
