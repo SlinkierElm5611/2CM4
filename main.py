@@ -117,7 +117,7 @@ DEFINITIONS { parameter definitions }
 
 
 !kinetic energy
-	EKin = 1/2*m*magnitude(v)^2
+	EKin = 1/2*200*magnitude(v)^2
 
 
 INITIAL VALUES
@@ -158,6 +158,12 @@ def match_fuel_masses(mass_fuel):
 		masses_of_second_stage.append(second_mass_fuel)
 	return masses_of_second_stage
 	
+def flight_time(mass1):
+    mass2 = compute_second_mass_fuel(mass1)
+    t1 = mass1/2000
+    t2 = mass2/300
+    tf = t1 + t2
+    return tf
 
 try:
 	user_name  = subprocess.run("whoami", stdout=subprocess.PIPE).stdout.decode('utf-8')
@@ -177,31 +183,39 @@ except:
 	output_path  = "output.txt"
 	flex_version = 6
 	
-mass_range = range(29000, 32000, 100)
+mass_range = range(20000, 37000, 1000)
 kinetic_energies = []
 masses = []
-for mass_one in mass_range:
-	mass_two:float = compute_second_mass_fuel(mass_one)
-	with open(flex_file_name, "w") as f:
-		print(flex_code%(mass_one, mass_two), file=f)
-	result = subprocess.run([flex_path, "-S", flex_file_name])
-	print(result.returncode)
 
-	with open(output_path, "r") as f:
-		data = np.loadtxt(f,skiprows=flex_version+1)
-		t = data[:,0]
-		max_energy = 0
-		for energy in data[:,3]:
-			if energy > max_energy:
-				max_energy = energy
-		kinetic_energies.append(max_energy)
-		masses.append(data[:,2][0])
-		pass
+for mass_one in mass_range:
+    mass_two:float = compute_second_mass_fuel(mass_one)
+    with open(flex_file_name,"w") as f:
+        print(flex_code%(mass_one,mass_two),file=f)
+    result = subprocess.run([flex_path, "-S", flex_file_name],timeout=15)
+    print(result.returncode)
+    
+    with open(output_path, "r") as f:
+        data = np.loadtxt(f,skiprows=flex_version+1)
+        t = data[:,0]
+        energy = data[:,3]
+        tfinal = flight_time(mass_one)
+        kfinal = energy[-2] + (energy[-1]-energy[-2])/(t[-1]-t[-2])*(tfinal-t[-2])
+        #kfinal = energy[-1]
+        kinetic_energies.append(kfinal)
+        masses.append(mass_one)
+        pass
+    
+i = 0
 current_max = 0
 for energy in kinetic_energies:
-	if energy > current_max:
-		current_max = energy
-print(current_max)
-plt.plot(mass_range, kinetic_energies)
+    if energy > current_max:
+        current_max = energy
+        i = i+1
+print('mass of fuel tank 1 is', masses[i-1],'kg with max kinetic energy', round(current_max,3))
+plt.plot(masses, kinetic_energies)
 plt.title("Max energy based on mass of fuel one")
 plt.show()
+
+    
+
+    
