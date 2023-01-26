@@ -1,6 +1,7 @@
 import subprocess
 import numpy as np
 import matplotlib.pyplot as plt
+import json
 
 flex_code  = """
 TITLE '2CM4 Assignment 1 GGL' { the problem identification }
