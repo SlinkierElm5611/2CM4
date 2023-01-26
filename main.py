@@ -20,7 +20,7 @@ DEFINITIONS { parameter definitions }
 	mfuel10 = %s !fuel mass of rocket stage 1 kg
 
 	!stage 2 rocket
-	mfuel20 = %s !fuel mass of rocket stage 2 kg
+	mfuel20 = 614000/17 - mfuel10 !fuel mass of rocket stage 2 kg
 
 
 !static parameters
@@ -133,7 +133,7 @@ EQUATIONS { PDE's, one for each variable }
 
 BOUNDARIES { The????ain definition }
 REGION 1 START(0) LINE TO (1)
-TIME 0 TO 3000 halt(radMag<rEarth or p=0)! or rrelMag<400) { if time dependent }
+TIME 0 TO 3000 halt(p=0 and t>(tfuel1+tfuel2))! or rrelMag<400) { if time dependent }
 
 !MONITORS { show progress }
 
@@ -144,20 +144,14 @@ END
 """
 
 
+#a function to compute the mass of the second stage fuel depending on the use of the first stage fuel
 def compute_second_mass_fuel(mass_of_first_stage_fuel):
 	total_cost = 3000000
 	cost_of_engine_one = 320*5000
 	cost_of_engine_two = 160*5000
 	return (total_cost-cost_of_engine_one-cost_of_engine_two-17*mass_of_first_stage_fuel-24000-12000)/17
 
-
-def match_fuel_masses(mass_fuel):
-	masses_of_second_stage  = []
-	for j in mass_fuel:
-		second_mass_fuel = compute_second_mass_fuel(j)
-		masses_of_second_stage.append(second_mass_fuel)
-	return masses_of_second_stage
-	
+#total flight time needed for the simulation	
 def flight_time(mass1):
     mass2 = compute_second_mass_fuel(mass1)
     t1 = mass1/2000
@@ -187,35 +181,38 @@ mass_range = range(20000, 37000, 1000)
 kinetic_energies = []
 masses = []
 
+#making initial perameters and empty lists 	
+mass_range = np.arange(31015, 31020.1,0.5)
+kinetic_energies = []
+masses = []
+
+#we want to find the best possible mass to use in the range listed above so we would run it in a for loop
 for mass_one in mass_range:
-    mass_two:float = compute_second_mass_fuel(mass_one)
     with open(flex_file_name,"w") as f:
-        print(flex_code%(mass_one,mass_two),file=f)
-    result = subprocess.run([flex_path, "-S", flex_file_name],timeout=15)
+        print(flex_code%(mass_one),file=f)
+    result = subprocess.run([flex_path, "-S", flex_file_name])
     print(result.returncode)
     
+    #using the output from the flex we import the data
     with open(output_path, "r") as f:
         data = np.loadtxt(f,skiprows=flex_version+1)
         t = data[:,0]
         energy = data[:,3]
         tfinal = flight_time(mass_one)
+        
+        #interpolating the kinetic energy
         kfinal = energy[-2] + (energy[-1]-energy[-2])/(t[-1]-t[-2])*(tfinal-t[-2])
-        #kfinal = energy[-1]
+        
+        #appending loop values to the lists 
         kinetic_energies.append(kfinal)
         masses.append(mass_one)
         pass
-    
-i = 0
-current_max = 0
-for energy in kinetic_energies:
-    if energy > current_max:
-        current_max = energy
-        i = i+1
-print('mass of fuel tank 1 is', masses[i-1],'kg with max kinetic energy', round(current_max,3))
+
+#finding the connecting vaules 
+i = np.argmax(kinetic_energies)
+maxmass2 = compute_second_mass_fuel(masses[i])
+print('Mass of fuel tank 1 is', masses[i],'kg with the mass of the stecond satge fuel being', round(maxmass2,3),'kg , and the max kinetic energy', round(kinetic_energies[i],3))
 plt.plot(masses, kinetic_energies)
 plt.title("Max energy based on mass of fuel one")
 plt.show()
-
-    
-
     

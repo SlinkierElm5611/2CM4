@@ -5,6 +5,12 @@
         "flex_file_name": "working",
         "output_file_name": "output.txt"
     },
+    "laptop-thq072e0\\stefan": {
+        "flex_version": 6,
+        "path_to_executable": "C:/FlexPDE6student/FlexPDE6s.exe",
+        "flex_file_name": "working",
+        "output_file_name": "output.txt"
+    },
     "laptop-fubm7507\\saart": {
         "flex_version": 6,
         "path_to_executable": "C:/FlexPDE6student/FlexPDE6s.exe",

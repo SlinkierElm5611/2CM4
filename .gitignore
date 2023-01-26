@@ -132,3 +132,7 @@ dmypy.json
 
 *.pde
 *.bak
+*.log
+*.dbg
+*.pg6
+*.txt
