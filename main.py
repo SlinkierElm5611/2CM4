@@ -1,7 +1,6 @@
 import subprocess
 import numpy as np
 import matplotlib.pyplot as plt
-import json
 
 flex_code  = """
 TITLE '2CM4 Assignment 1 GGL' { the problem identification }
@@ -143,13 +142,10 @@ for t= 0 by endtime/300 to endtime
 END
 """
 
-
 #a function to compute the mass of the second stage fuel depending on the use of the first stage fuel
 def compute_second_mass_fuel(mass_of_first_stage_fuel):
-	total_cost = 3000000
-	cost_of_engine_one = 320*5000
-	cost_of_engine_two = 160*5000
-	return (total_cost-cost_of_engine_one-cost_of_engine_two-17*mass_of_first_stage_fuel-24000-12000)/17
+	mass2 = 614000/17 - mass_of_first_stage_fuel
+	return mass2
 
 #total flight time needed for the simulation	
 def flight_time(mass1):
@@ -176,10 +172,7 @@ except:
 	flex_path  = "C:/FlexPDE6student/FlexPDE6s.exe"
 	output_path  = "output.txt"
 	flex_version = 6
-	
-mass_range = range(20000, 37000, 1000)
-kinetic_energies = []
-masses = []
+
 
 #making initial perameters and empty lists 	
 mass_range = np.arange(31015, 31020.1,0.5)
@@ -215,4 +208,3 @@ print('Mass of fuel tank 1 is', masses[i],'kg with the mass of the stecond satge
 plt.plot(masses, kinetic_energies)
 plt.title("Max energy based on mass of fuel one")
 plt.show()
-    
